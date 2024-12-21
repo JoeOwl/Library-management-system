@@ -16,11 +16,20 @@ import json
 import os
 import sys
 
-# Initialize the database connection
-db = LMS(os.path.join(os.path.dirname(sys.executable), "lms.db"))
+def get_executable_directory():
+    # Get the directory of the executable (or script during development)
+    if getattr(sys, 'frozen', False):  # Check if the program is frozen (packaged as .exe)
+        return os.path.dirname(sys.executable)  # Path to the .exe
+    else:
+        return os.path.dirname(os.path.abspath(__file__))  # Path to the script during development
 
-# Load application settings from a JSON file
-settings_file_path = os.path.join(os.path.dirname(sys.executable), 'settings.json')
+# Get the directory where the .exe is located
+executable_directory = get_executable_directory()
+# Initialize the database with the path to the SQLite file
+db = LMS(os.path.join(executable_directory, "lms.db"))
+
+# Load settings from a JSON file
+settings_file_path = os.path.join(executable_directory, 'settings.json')
 with open(settings_file_path, "r") as settings_file:
     settings = json.load(settings_file)
 
