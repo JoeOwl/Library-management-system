@@ -66,10 +66,11 @@ def main():
     #ON UPDATE CASCADE: If the primary key in the referenced table (books or student) changes, the corresponding foreign key in issued_book will also update.
     #ON DELETE CASCADE: If a book or student record is deleted, related entries in issued_book are automatically deleted to maintain referential integrity.
     
-    sql_create_tasks1_table = """CREATE TABLE IF NOT EXISTS student (
+    sql_create_students_table = """CREATE TABLE IF NOT EXISTS student (
                                     id integer PRIMARY KEY,
                                     name text NOT NULL,
-                                    class text NOT NULL
+                                    class text NOT NULL,
+                                    email text
                                 );"""
                                 
     #EX:                                
@@ -108,7 +109,7 @@ def main():
 
         # create tasks table
         create_table(conn, sql_create_tasks_table)
-        create_table(conn, sql_create_tasks1_table)
+        create_table(conn, sql_create_students_table)
         create_table(conn, sql_create_tasks2_table)
     else:
         print("Error! cannot create the database connection.")
