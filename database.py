@@ -3,7 +3,6 @@ import openpyxl
 
 
 class LMS:
-    #Establishes a connection to the SQLite database and creates a cursor object for executing SQL queries.
     def __init__(self, db):
         self.conn = sqlite3.connect(db)
         self.cur = self.conn.cursor()
@@ -21,16 +20,7 @@ class LMS:
         self.conn.commit()
         return self.cur.lastrowid
     
-    #Reads student data from an Excel file (xl_file) and inserts it into the student table.
-    #Each row in the Excel file corresponds to a new student record.
-    ''' ##Excel format
     
-        id    |  name            | class
-        -------------------------------------
-        101   | Alice Johnson    | 10A
-        102   | Bob Smith        | 11B
-        103   | Charlie Brown    | 9C
-    '''
     def add_new_student(self, xl_file):
         wb = openpyxl.load_workbook(xl_file)
         sheet = wb['Sheet1']
@@ -60,7 +50,7 @@ class LMS:
     
     def view_book_list(self):
         """
-        Query all book rows in the books table, Fetches and returns all books with a status of either 'available' or 'issued'.
+        Query all book rows in the books table
         :param self:
         :return: all book list
         """
@@ -68,7 +58,6 @@ class LMS:
         return self.cur.fetchall()
     
     def miscellaneous_books(self):
-        #Fetches and returns all books with the status 'miscellaneous'.
         self.cur.execute("SELECT * FROM books WHERE status = 'miscellaneous'")
         return self.cur.fetchall()
     
@@ -146,7 +135,7 @@ class LMS:
     
     def update_book_status(self,book_id,status):
         """
-        Updates the status of a book (e.g., from 'available' to 'issued').
+        update book status of a book
         :param conn:
         :param book_id: id of book
         :param status: status of book
@@ -183,67 +172,41 @@ class LMS:
         return (sql,self.conn)
     
     def all_books(self):
-        """
-        Retrieves all books that are either available or issued.
-        Constructs a SQL query to select book details such as ID, name, author, edition, and price
-        from the 'books' table where the book status is either 'available' or 'issued'.
-        Returns the SQL query string and the database connection object.
-        """
-        sql = "SELECT book_id, book_name, book_author, book_edition, book_price FROM books WHERE status = 'available' or status = 'issued'"
-        return (sql, self.conn)
-
-
+        sql="SELECT book_id, book_name, book_author, book_edition, book_price FROM books WHERE status = 'available' or status = 'issued'"
+        return (sql,self.conn)
+    
     def fine_detail(self):
-        """
-        Retrieves all fine details from the 'fine_details' table.
-        Constructs a SQL query to select all columns from the 'fine_details' table.
-        Returns the SQL query string and the database connection object.
-        """
-        sql = "SELECT * FROM fine_details"
-        return (sql, self.conn)
-
-
-    def move_to_miscellaneous(self, id):
-        """
-        Marks a book as miscellaneous in the 'issued_book' table.
-        Updates the 'is_miscellaneous' column to 1 for the specified book ID.
-        Commits the change to the database.
-        
-        :param id: The ID of the book to be marked as miscellaneous.
-        """
+        sql="SELECT * FROM fine_details"
+        return (sql,self.conn)
+    
+    def move_to_miscellaneous(self,id):
         sql = '''UPDATE issued_book SET is_miscellaneous = ? WHERE book_id = ?'''
-        self.cur.execute(sql, (1, id,))
+        self.cur.execute(sql,(1,id,))
         self.conn.commit()
-
-
-    def update_book_details(self, data):
-        """
-        Updates the details of an existing book in the 'books' table.
-        Replaces the values for the book's ID, name, author, edition, price, and date of purchase
-        with the new data provided.
-        Commits the change to the database.
     
-        :param data: A tuple containing the updated book details, including:
-                     (book_id, book_name, book_author, book_edition, book_price, date_of_purchase, book_id).
-        """
-        sql = '''UPDATE books SET book_id = ?, book_name = ?, book_author = ?, book_edition = ?, book_price = ?, date_of_purchase = ? WHERE book_id = ?'''
-        self.cur.execute(sql, data)
+    def update_book_details(self,data):
+        sql = '''UPDATE books SET book_id = ?,book_name = ?,book_author = ?,book_edition = ?,book_price = ?,date_of_purchase = ? WHERE book_id = ?'''
+        self.cur.execute(sql,data)
         self.conn.commit()
-
     
-    def save_fine_detail(self, data):
-        """
-        Saves a fine record into the 'fine_details' table.
-        Inserts details about a book fine, including book ID, student ID, issue date, return date,
-        total fine amount, and the number of overdue days.
-        Commits the change to the database and returns the ID of the newly inserted record.
-    
-        :param data: A tuple containing fine details, including:
-                     (book_id, student_id, issued_on, returned_date, total_fine, no_of_day).
-        :return: The ID of the newly inserted fine record.
-        """
-        sql = '''INSERT INTO fine_details(book_id, student_id, issued_on, returned_date, total_fine, no_of_day)
-                  VALUES(?,?,?,?,?,?)'''
+    def save_fine_detail(self,data):
+        sql = '''INSERT INTO fine_details(book_id,student_id,issued_on,returned_date,total_fine,no_of_day)
+            VALUES(?,?,?,?,?,?)'''
         self.cur.execute(sql, data)
         self.conn.commit()
         return self.cur.lastrowid
+
+    def search_book(self, search_key, search_value):
+        """
+        Search for a book in the books table based on a specific key and value
+        :param self:
+        :param search_key: the column name to search by (e.g., 'book_name', 'book_author', 'book_id')
+        :param search_value: the value to search for in the specified column
+        :return: all matching book details
+        """
+        try:
+            query = f"SELECT * FROM books WHERE {search_key} LIKE ?"
+            self.cur.execute(query, (f"%{search_value}%",))
+            return self.cur.fetchall()
+        except Exception as e:
+            return f"An error occurred: {e}"
