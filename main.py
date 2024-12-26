@@ -14,6 +14,7 @@ from tkinter import filedialog
 from tkinter.messagebox import askokcancel, showinfo, showerror
 import os
 import sys
+import requests
 
 def get_executable_directory():
     # Get the directory of the executable (or script during development)
@@ -188,6 +189,9 @@ class LMSApp(customtkinter.CTk):
 
         button_11 = customtkinter.CTkButton(master=left_frame, text="Search Book", corner_radius=3, command=self.search_book_win)
         button_11.pack(padx=20, pady=10)
+
+        button_12 = customtkinter.CTkButton(master=right_frame, text="Retrieve Book by ISBN", corner_radius=3, command=self.retrieve_book_by_isbn)
+        button_12.pack(padx=20, pady=10)
         
         footer_frame = customtkinter.CTkFrame(master=self,corner_radius=8,fg_color="#f55d5d")
         footer_frame.pack(padx=20,pady=10,fill="x",anchor="s")
@@ -250,6 +254,50 @@ class LMSApp(customtkinter.CTk):
                 showerror(title="Error",message="Something went wrong. Try Again!")
         except:
             showerror(title="Error",message="File is not in correct form or file not selected")
+
+    def retrieve_book_by_isbn(self):
+        # Prompt user for ISBN
+        isbn_window = customtkinter.CTkToplevel(self)
+        isbn_window.title("Retrieve Book by ISBN")
+        isbn_window.geometry("400x200")
+
+        isbn_label = customtkinter.CTkLabel(isbn_window, text="Enter ISBN:")
+        isbn_label.pack(pady=10)
+        
+        isbn_entry = customtkinter.CTkEntry(isbn_window, width=300)
+        isbn_entry.pack(pady=5)
+        
+        def fetch_book_info():
+            isbn = isbn_entry.get().strip()
+            if not isbn:
+                showerror("Error", "ISBN cannot be empty!")
+                return
+
+            try:
+                api_url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}"
+                response = requests.get(api_url)
+                if response.status_code == 200:
+                    book_data = response.json()
+                    if "items" in book_data:
+                        book_info = book_data["items"][0]["volumeInfo"]
+                        book_title = book_info.get("title", "Unknown Title")
+                        book_authors = ", ".join(book_info.get("authors", ["Unknown Author"]))
+                        book_publisher = book_info.get("publisher", "Unknown Publisher")
+                        book_description = book_info.get("description", "No description available.")
+                        
+                        showinfo("Book Retrieved", f"Title: {book_title}\n"
+                                                   f"Author(s): {book_authors}\n"
+                                                   f"Publisher: {book_publisher}\n"
+                                                   f"Description: {book_description}")
+                    else:
+                        showerror("Error", "No book found with this ISBN.")
+                else:
+                    showerror("Error", f"Failed to fetch data. HTTP Status Code: {response.status_code}")
+            except Exception as e:
+                showerror("Error", f"An error occurred while retrieving the book: {e}")
+        
+        fetch_button = customtkinter.CTkButton(isbn_window, text="Fetch Book Info", command=fetch_book_info)
+        fetch_button.pack(pady=10)
 
 if __name__ == '__main__':
     app = LMSApp()
