@@ -11,7 +11,7 @@ class TestAddBook(unittest.TestCase):
         self.mock_db = MagicMock()
         
         # Patch the LMS class to return the mock database
-        patcher = patch('add_book.LMS', return_value=self.mock_db)
+        patcher = patch('database.LMS', return_value=self.mock_db)
         self.addCleanup(patcher.stop)
         self.mock_LMS = patcher.start()
 
@@ -79,9 +79,6 @@ class TestAddBook(unittest.TestCase):
 
             # Check that an error message was shown
             mock_error.assert_called_once_with(title="Not Saved", message="Something went wrong. Please try again...")
-
-if __name__ == '__main__':
-    unittest.main(exit=False)
 
 
 #API Integration with Flask
@@ -199,9 +196,6 @@ class TestRetrieveBook(unittest.TestCase):
             # Verify error message
             mock_error.assert_called_once_with(title="Empty Field", message="Please enter an ISBN ID to search.")
 
-if __name__ == '__main__':
-    unittest.main(exit=False)
-
 
 #BookReport
 import unittest
@@ -215,9 +209,9 @@ class TestBookReport(unittest.TestCase):
         # Initialize the BookReport instance for testing
         self.book_report = BookReport()
 
-    @patch('your_module.db.all_available_book')
-    @patch('your_module.filedialog.askdirectory', return_value='/fake/dir')
-    @patch('your_module.pd.DataFrame.to_excel')
+    @patch('BookReport.db.all_available_book')
+    @patch('BookReport.filedialog.askdirectory', return_value='/fake/dir')
+    @patch('BookReport.pd.DataFrame.to_excel')
     def test_export_available_book(self, mock_to_excel, mock_askdirectory, mock_all_available_book):
         # Mock the database query response
         mock_all_available_book.return_value = ("SELECT * FROM available_books", MagicMock())
@@ -230,9 +224,9 @@ class TestBookReport(unittest.TestCase):
         mock_askdirectory.assert_called_once()
         mock_to_excel.assert_called_once_with('/fake/dir/available_books.xlsx')
 
-    @patch('your_module.db.all_issued_book')
-    @patch('your_module.filedialog.askdirectory', return_value='/fake/dir')
-    @patch('your_module.pd.DataFrame.to_excel')
+    @patch('BookReport.db.all_issued_book')
+    @patch('BookReport.filedialog.askdirectory', return_value='/fake/dir')
+    @patch('BookReport.pd.DataFrame.to_excel')
     def test_export_issued_book(self, mock_to_excel, mock_askdirectory, mock_all_issued_book):
         mock_all_issued_book.return_value = ("SELECT * FROM issued_books", MagicMock())
         pd.read_sql_query = MagicMock(return_value=pd.DataFrame())
@@ -242,9 +236,9 @@ class TestBookReport(unittest.TestCase):
         mock_askdirectory.assert_called_once()
         mock_to_excel.assert_called_once_with('/fake/dir/issued_books.xlsx')
 
-    @patch('your_module.db.all_books')
-    @patch('your_module.filedialog.askdirectory', return_value='/fake/dir')
-    @patch('your_module.pd.DataFrame.to_excel')
+    @patch('BookReport.db.all_books')
+    @patch('BookReport.filedialog.askdirectory', return_value='/fake/dir')
+    @patch('BookReport.pd.DataFrame.to_excel')
     def test_export_all_book(self, mock_to_excel, mock_askdirectory, mock_all_books):
         mock_all_books.return_value = ("SELECT * FROM all_books", MagicMock())
         pd.read_sql_query = MagicMock(return_value=pd.DataFrame())
@@ -254,9 +248,9 @@ class TestBookReport(unittest.TestCase):
         mock_askdirectory.assert_called_once()
         mock_to_excel.assert_called_once_with('/fake/dir/all_books.xlsx')
 
-    @patch('your_module.db.fine_detail')
-    @patch('your_module.filedialog.askdirectory', return_value='/fake/dir')
-    @patch('your_module.pd.DataFrame.to_excel')
+    @patch('BookReport.db.fine_detail')
+    @patch('BookReport.filedialog.askdirectory', return_value='/fake/dir')
+    @patch('BookReport.pd.DataFrame.to_excel')
     def test_export_fine_detail(self, mock_to_excel, mock_askdirectory, mock_fine_detail):
         mock_fine_detail.return_value = ("SELECT * FROM fine_details", MagicMock())
         pd.read_sql_query = MagicMock(return_value=pd.DataFrame())
@@ -265,9 +259,6 @@ class TestBookReport(unittest.TestCase):
 
         mock_askdirectory.assert_called_once()
         mock_to_excel.assert_called_once_with('/fake/dir/fine_details.xlsx')
-
-if __name__ == '__main__':
-    unittest.main(exit=False)
 
 
 #database
@@ -331,25 +322,25 @@ class TestLMS(unittest.TestCase):
         self.conn.commit()
 
     def test_add_new_book(self):
-        book_data = ('B001', 'Python Basics', 'John Doe', '1st', 29.99, '2023-01-01', 'available')
+        book_data = ('1', 'Python Basics', 'John Doe', '1st', 29.99, '2023-01-01', 'available')
         book_id = self.test_db.add_new_book(book_data)
         self.cur.execute("SELECT * FROM books WHERE book_id = ?", (book_id,))
         result = self.cur.fetchone()
         self.assertIsNotNone(result)
-        self.assertEqual(result[0], 'B001')
+        self.assertEqual(result[0], '1')
 
     def test_delete_book(self):
-        book_data = ('B002', 'Advanced Python', 'Jane Doe', '2nd', 39.99, '2023-01-02', 'available')
+        book_data = ('2', 'Advanced Python', 'Jane Doe', '2nd', 39.99, '2023-01-02', 'available')
         self.test_db.add_new_book(book_data)
-        result = self.test_db.delete_book('B002')
+        result = self.test_db.delete_book('2')
         self.assertEqual(result, 'deleted')
-        self.cur.execute("SELECT * FROM books WHERE book_id = 'B002'")
+        self.cur.execute("SELECT * FROM books WHERE book_id = '2'")
         self.assertIsNone(self.cur.fetchone())
 
     def test_view_book_list(self):
         books = [
-            ('B003', 'Data Science 101', 'Alice', '1st', 49.99, '2023-01-03', 'available'),
-            ('B004', 'Machine Learning', 'Bob', '3rd', 59.99, '2023-01-04', 'issued')
+            ('3', 'Data Science 101', 'Alice', '1st', 49.99, '2023-01-03', 'available'),
+            ('4', 'Machine Learning', 'Bob', '3rd', 59.99, '2023-01-04', 'issued')
         ]
         for book in books:
             self.test_db.add_new_book(book)
@@ -357,33 +348,33 @@ class TestLMS(unittest.TestCase):
         self.assertEqual(len(result), 2)
 
     def test_issue_book(self):
-        book_data = ('B005', 'Deep Learning', 'Eve', '1st', 79.99, '2023-01-05', 'available')
+        book_data = ('5', 'Deep Learning', 'Eve', '1st', 79.99, '2023-01-05', 'available')
         self.test_db.add_new_book(book_data)
-        issue_data = ('B005', 'S001', '2023-01-10', '2023-01-20')
+        issue_data = ('5', 'S001', '2023-01-10', '2023-01-20')
         issue_id = self.test_db.issue_book(issue_data)
-        self.cur.execute("SELECT * FROM issued_book WHERE book_id = 'B005'")
+        self.cur.execute("SELECT * FROM issued_book WHERE book_id = '5'")
         result = self.cur.fetchone()
         self.assertIsNotNone(result)
 
     def test_return_book(self):
-        book_data = ('B006', 'AI Basics', 'Trent', '2nd', 69.99, '2023-01-06', 'issued')
+        book_data = ('6', 'AI Basics', 'Trent', '2nd', 69.99, '2023-01-06', 'issued')
         self.test_db.add_new_book(book_data)
-        issue_data = ('B006', 'S002', '2023-01-11', '2023-01-21')
+        issue_data = ('6', 'S002', '2023-01-11', '2023-01-21')
         self.test_db.issue_book(issue_data)
-        result = self.test_db.return_book('B006')
+        result = self.test_db.return_book('6')
         self.assertEqual(result, 'returned')
-        self.cur.execute("SELECT * FROM issued_book WHERE book_id = 'B006'")
+        self.cur.execute("SELECT * FROM issued_book WHERE book_id = '6'")
         self.assertIsNone(self.cur.fetchone())
 
     def test_update_book_status(self):
-        book_data = ('B007', 'Cyber Security', 'Mallory', '3rd', 89.99, '2023-01-07', 'available')
+        book_data = ('7', 'Cyber Security', 'Mallory', '3rd', 89.99, '2023-01-07', 'available')
         self.test_db.add_new_book(book_data)
-        self.test_db.update_book_status('B007', 'issued')
-        self.cur.execute("SELECT status FROM books WHERE book_id = 'B007'")
+        self.test_db.update_book_status('7', 'issued')
+        self.cur.execute("SELECT status FROM books WHERE book_id = '7'")
         result = self.cur.fetchone()
         self.assertEqual(result[0], 'issued')
 
 if __name__ == '__main__':
-    unittest.main(exit=False)
+    unittest.main()
 
 
