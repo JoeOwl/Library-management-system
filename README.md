@@ -12,16 +12,18 @@ The Library Management System (LMS) is a comprehensive application designed to s
 - **Edit Book Details**: Update the information of existing books.
 - **Issue Books**: Allow users to borrow books from the library.
 - **Return Books**: Manage the return of borrowed books.
-- **Import Data**: Import book and user data into the system.
+- **Import Student Data**: Import student data into the system.
 - **Dark Theme**: A user-friendly dark theme for better accessibility.
-
+- **Search**: Search in the database by book ID, book name, or author name.
+- **ISBN Book Search**: Retrieve book details using the ISBN number through an API.
+- **Report Export**: Export reports as Excel files for:
+  - All available books.
+  - All issued books.
+  - All books.
+  - Fine details.
+    
 ### Advanced Features
 
-- **API Integration with Flask**:
-  - Create a Book Search API for querying the library's collection.
-  - Integrate with external APIs, such as Google Books, to enhance search functionality.
-- **Book Search**:
-  - Enable users to search for books based on various criteria (title, author, genre, etc.).
 - **Borrowing History**:
   - Maintain a record of all borrowing transactions for users.
 - **Reminder Mail**:
@@ -29,4 +31,14 @@ The Library Management System (LMS) is a comprehensive application designed to s
 
 ## Requirements
 
-- Python 3.11+
+- **Babel**==2.12.1
+- **customtkinter**==5.1.2
+- **darkdetect**==0.8.0
+- **et-xmlfile**==1.1.0
+- **numpy**==1.24.2
+- **openpyxl**==3.1.1
+- **pandas**==1.5.3
+- **python-dateutil**==2.8.2
+- **pytz**==2022.7.1
+- **six**==1.16.0
+- **tkcalendar**==1.6.1
