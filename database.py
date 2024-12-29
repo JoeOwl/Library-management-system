@@ -184,11 +184,15 @@ class LMS:
         self.cur.execute(sql,(1,id,))
         self.conn.commit()
     
-    def update_book_details(self,data):
-        sql = '''UPDATE books SET book_id = ?,book_name = ?,book_author = ?,book_edition = ?,book_price = ?,date_of_purchase = ? WHERE book_id = ?'''
-        self.cur.execute(sql,data)
+    def update_book_details(self, data):
+        sql = '''UPDATE books 
+                    SET book_id = ?, book_name = ?, book_author = ?, 
+                        book_edition = ?, book_price = ?, date_of_purchase = ? 
+                    WHERE book_id = ?'''
+        self.cur.execute(sql, data)
         self.conn.commit()
-    
+        return self.cur.rowcount > 0
+
     def save_fine_detail(self,data):
         sql = '''INSERT INTO fine_details(book_id,student_id,issued_on,returned_date,total_fine,no_of_day)
             VALUES(?,?,?,?,?,?)'''
