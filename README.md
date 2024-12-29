@@ -31,14 +31,14 @@ The Library Management System (LMS) is a comprehensive application designed to s
 
 ## Requirements
 
-- **Babel**->2.12.1
-- **customtkinter**->5.1.2
-- **darkdetect**->0.8.0
-- **et-xmlfile**->1.1.0
-- **numpy**->1.24.2
-- **openpyxl**->3.1.1
-- **pandas**->1.5.3
-- **python-dateutil**->2.8.2
-- **pytz**->2022.7.1
-- **six**->1.16.0
-- **tkcalendar**->1.6.1
+- **Babel** -> 2.12.1
+- **customtkinter** -> 5.1.2
+- **darkdetect** -> 0.8.0
+- **et-xmlfile** -> 1.1.0
+- **numpy** -> 1.24.2
+- **openpyxl** -> 3.1.1
+- **pandas** -> 1.5.3
+- **python-dateutil** -> 2.8.2
+- **pytz** -> 2022.7.1
+- **six** -> 1.16.0
+- **tkcalendar** -> 1.6.1
