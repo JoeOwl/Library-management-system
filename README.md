@@ -30,6 +30,7 @@ The Library Management System (LMS) is a comprehensive application designed to s
 ## Requirements
 
 - **Babel** -> 2.12.1
+- **Python** -> 3.11
 - **customtkinter** -> 5.1.2
 - **darkdetect** -> 0.8.0
 - **et-xmlfile** -> 1.1.0
