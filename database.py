@@ -26,8 +26,8 @@ class LMS:
         sheet = wb['Sheet1']
         for row in sheet.rows:
             dt = [cell.value for cell in row]
-            sql = '''INSERT INTO student (id,name,class,email)
-            VALUES(?,?,?,?) '''
+            sql = '''INSERT INTO student (id, name, class, email)
+                    VALUES (?, ?, ?, ?) '''
             self.cur.execute(sql, dt)
         self.conn.commit()
         return self.cur.lastrowid
@@ -211,20 +211,4 @@ class LMS:
         except Exception as e:
             return f"An error occurred: {e}"
         
-    def get_student_by_id(self, student_id):
-        """
-        Retrieve the student details based on the student_id.
-        
-        Args:
-        - student_id (int): The unique identifier for the student.
-        
-        Returns:
-        - tuple: A tuple containing student details (id, name, class, email)
-        """
-        query = "SELECT id, name, class, email FROM students WHERE id = ?"
-        result = self.execute_query(query, (student_id,))
-        
-        if result:
-            return result[0]  # Return the student details as a tuple
-        else:
-            return None  # Return None if the student is not found
+    
