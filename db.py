@@ -61,10 +61,10 @@ def main():
                                 );"""
     
     sql_create_tasks1_table = """CREATE TABLE IF NOT EXISTS student (
-                                    id integer PRIMARY KEY,
-                                    name integer NOT NULL,
-                                    class text NOT NULL,
-                                    email TEXT NOT NULL
+                                id INTEGER PRIMARY KEY,
+                                name TEXT NOT NULL,
+                                class TEXT NOT NULL,
+                                email TEXT NOT NULL
                                 );"""
     
     sql_create_tasks2_table = """CREATE TABLE IF NOT EXISTS fine_details (
