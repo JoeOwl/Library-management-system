@@ -24,8 +24,6 @@ The Library Management System (LMS) is a comprehensive application designed to s
     
 ### Advanced Features
 
-- **Borrowing History**:
-  - Maintain a record of all borrowing transactions for users.
 - **Reminder Mail**:
   - Send email reminders for due or overdue books.
 
