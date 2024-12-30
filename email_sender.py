@@ -2,21 +2,20 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email_validator import validate_email, EmailNotValidError
+from datetime import datetime
 
 class EmailSender:
     def __init__(self):
-        self.sender_email = "your-email@example.com"
-        self.sender_password = "your-email-password"
+        self.sender_email = "mohmad.walid.m4.555@gmail.com"  # Corrected domain
+        self.sender_password = "mw632221mwm4mw555125"
         self.smtp_server = "smtp.gmail.com"
         self.smtp_port = 587
 
     def send_email(self, student, book, issue_time, end_time):
         try:
-            # Validate email address
-            validate_email(student[3])
+            receiver_email = student[3]
 
             # Email details
-            receiver_email = student[3]
             subject = f"Book Issued: {book[1]}"
 
             # Email body

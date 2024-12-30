@@ -62,7 +62,7 @@ def main():
     
     sql_create_tasks1_table = """CREATE TABLE IF NOT EXISTS student (
                                 id INTEGER PRIMARY KEY,
-                                name TEXT NOT NULL,
+                                name INTEGER NOT NULL,
                                 class TEXT NOT NULL,
                                 email TEXT NOT NULL
                                 );"""

@@ -211,4 +211,25 @@ class LMS:
         except Exception as e:
             return f"An error occurred: {e}"
         
-    
+    def get_student_by_id(self, student_id):
+        """
+        Retrieve the student details based on the student_id.
+        
+        Args:
+        - student_id (int): The unique identifier for the student.
+        
+        Returns:
+        - tuple: A tuple containing student details (id, name, class, email)
+        """
+        query = "SELECT id, name, class, email FROM student WHERE id = ?"
+        
+        # Execute the query using the cursor
+        self.cur.execute(query, (student_id,))
+        
+        # Fetch the result
+        result = self.cur.fetchall()
+        
+        if result:
+            return result[0]  # Return the student details as a tuple
+        else:
+            return None  # Return None if the student is not found
