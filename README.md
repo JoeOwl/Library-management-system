@@ -21,6 +21,11 @@ The Library Management System (LMS) is a comprehensive application designed to s
   - All issued books.
   - All books.
   - Fine details.
+- **Unit Testing**: Comprehensive unit tests for all features to ensure the system functions as expected.
+- **Button Color Customization**: Option to change button colors to green, blue, or dark blue for better UI/UX.
+- **Modify Fees**: Ability to adjust the charge per day for book fines.
+- **Adjust Borrowing Period**: Change the allowed period for borrowing books.
+- **Footer Customization**: Edit the footer of the application to meet specific needs or preferences.
     
 ### Advanced Features
 
