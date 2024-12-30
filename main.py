@@ -243,17 +243,32 @@ class LMSApp(customtkinter.CTk):
     
     def import_student(self):
         try:
-            filetypes = (
-                ('excel files', '*.xlsx'),
-            )
-            file = filedialog.askopenfilename(title="Import Students",filetypes=filetypes)
+            # Open file dialog to select an Excel file
+            filetypes = (('Excel files', '*.xlsx'),)
+            file = filedialog.askopenfilename(title="Import Students", filetypes=filetypes)
+            
+            # Check if the file is selected
+            if not file:
+                showerror(title="Error", message="No file selected!")
+                return
+            
+            # Check if the file extension is .xlsx
+            if not file.endswith('.xlsx'):
+                showerror(title="Error", message="The selected file is not a valid Excel file!")
+                return
+            
+            # Try to add students from the selected file
             res = db.add_new_student(file)
-            if res != None:
-                showinfo(title="Success",message="Students imported successfully")
+            
+            # If adding students was successful
+            if res is not None:
+                showinfo(title="Success", message="Students imported successfully")
             else:
-                showerror(title="Error",message="Something went wrong. Try Again!")
-        except:
-            showerror(title="Error",message="File is not in correct form or file not selected")
+                showerror(title="Error", message="Something went wrong. Try again!")
+    
+        except Exception as e:
+            # Catch any other unexpected errors and display the message
+            showerror(title="Error", message=f"An error occurred: {str(e)}")
 
     def retrieve_book_by_isbn(self):
         # Prompt user for ISBN
