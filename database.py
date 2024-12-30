@@ -26,8 +26,8 @@ class LMS:
         sheet = wb['Sheet1']
         for row in sheet.rows:
             dt = [cell.value for cell in row]
-            sql = '''INSERT INTO student (id,name,class)
-            VALUES(?,?,?) '''
+            sql = '''INSERT INTO student (id,name,class,email)
+            VALUES(?,?,?,?) '''
             self.cur.execute(sql, dt)
         self.conn.commit()
         return self.cur.lastrowid
