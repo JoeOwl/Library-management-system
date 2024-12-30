@@ -7,6 +7,7 @@ import datetime
 import json
 import os
 import sys
+from email_sender import EmailSender  # Import the EmailSender class
 
 db = LMS(os.path.join(os.path.dirname(sys.executable), "lms.db"))
 
@@ -73,7 +74,16 @@ class IssueBook(customtkinter.CTkToplevel):
                 res2 = db.update_book_status(book_id,"issued")
                 
                 if res1 != None:
-                    showinfo(title="Issued",message=f"Book issued successfully to {student_id}")
+                    # Fetch student details to send the email
+                    student_info = db.get_student_by_id(student_id)  # Assuming a method that fetches student data by ID
+                    student_name = student_info[1]  # Student name
+                    student_email = student_info[3]  # Student email
+                    
+                    # Send the email with book issuance details
+                    email_sender = EmailSender()
+                    email_sender.send_email(student_info, book_id, cur_dt, self.expiry_datetime())
+                    
+                    showinfo(title="Issued",message=f"Book issued successfully to {student_name}. An email has been sent.")
                 else:
                     showerror(title="Error",message="Something went wrong! Try Again..")
             else:
