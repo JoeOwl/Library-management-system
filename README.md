@@ -21,17 +21,21 @@ The Library Management System (LMS) is a comprehensive application designed to s
   - All issued books.
   - All books.
   - Fine details.
+- **Unit Testing**: Comprehensive unit tests for all features to ensure the system functions as expected.
+- **Button Color Customization**: Option to change button colors to green, blue, or dark blue for better UI/UX.
+- **Modify Fees**: Ability to adjust the charge per day for book fines.
+- **Adjust Borrowing Period**: Change the allowed period for borrowing books.
+- **Footer Customization**: Edit the footer of the application to meet specific needs or preferences.
     
 ### Advanced Features
 
-- **Borrowing History**:
-  - Maintain a record of all borrowing transactions for users.
 - **Reminder Mail**:
   - Send email reminders for due or overdue books.
 
 ## Requirements
 
 - **Babel** -> 2.12.1
+- **Python** -> 3.11
 - **customtkinter** -> 5.1.2
 - **darkdetect** -> 0.8.0
 - **et-xmlfile** -> 1.1.0
